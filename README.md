@@ -1,5 +1,7 @@
 # Payload Blank Template
 
+## Loom video : git remote add origin https://github.com/tarunl2002/cms-payload.git
+
 This template comes configured with the bare minimum to get started on anything you need.
 
 ## Quick start
