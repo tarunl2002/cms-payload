@@ -11,6 +11,7 @@ import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import Posts from './collections/Posts'
 import { MarkFeature } from './features/MarkFeature'
+import { FootnoteFeature } from './features/FootNoteFeature'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -26,6 +27,7 @@ export default buildConfig({
   editor: lexicalEditor({
     features: ({ defaultFeatures }) => [
       ...defaultFeatures,
+      FootnoteFeature(),
       MarkFeature(),
     ],
   }),
