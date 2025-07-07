@@ -10,7 +10,7 @@ import sharp from 'sharp'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import Posts from './collections/Posts'
-import { NoOpButtonFeature } from './features/NoOpButton'
+import { MarkFeature } from './features/MarkFeature'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -26,7 +26,7 @@ export default buildConfig({
   editor: lexicalEditor({
     features: ({ defaultFeatures }) => [
       ...defaultFeatures,
-      NoOpButtonFeature(),
+      MarkFeature(),
     ],
   }),
   secret: process.env.PAYLOAD_SECRET || '',

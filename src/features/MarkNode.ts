@@ -1,10 +1,10 @@
 // src/features/highlight/MarkNode.ts
 import {
   ElementNode,
-  LexicalEditor,
   NodeKey,
-  Spread,
   SerializedElementNode,
+  Spread,
+  EditorConfig,
 } from 'lexical';
 
 export type SerializedMarkNode = Spread<
@@ -24,18 +24,16 @@ export class MarkNode extends ElementNode {
     return new MarkNode(node.__key);
   }
 
-  createDOM(): HTMLElement {
+  constructor(key?: NodeKey) {
+    super(key);
+  }
+
+  createDOM(_config: EditorConfig): HTMLElement {
     return document.createElement('mark');
   }
 
   updateDOM(): false {
     return false;
-  }
-
-  static importJSON(serializedNode: SerializedMarkNode): MarkNode {
-    const node = new MarkNode();
-    node.setFormat(serializedNode.format);
-    return node;
   }
 
   exportJSON(): SerializedMarkNode {
@@ -46,8 +44,8 @@ export class MarkNode extends ElementNode {
     };
   }
 
-  static importDOM(): null {
-    return null; // optional: define if you want to support pasting HTML with <mark>
+  static importJSON(): MarkNode {
+    return new MarkNode();
   }
 
   decorate(): null {
@@ -55,6 +53,7 @@ export class MarkNode extends ElementNode {
   }
 }
 
+// Export helper functions
 export function $createMarkNode(): MarkNode {
   return new MarkNode();
 }
