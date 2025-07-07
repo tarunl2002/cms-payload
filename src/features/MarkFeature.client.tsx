@@ -1,14 +1,23 @@
 'use client';
-
 import React from 'react';
 import {
   createClientFeature,
   toolbarFeatureButtonsGroupWithItems,
 } from '@payloadcms/richtext-lexical/client';
-import { $getSelection, $isRangeSelection } from 'lexical';
-import { $wrapSelectionInMarkNode } from '@lexical/mark';
+
+import {
+  $getSelection,
+  $isRangeSelection,
+} from 'lexical';
+
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { $createMarkNode, MarkNode } from './MarkNode';
+
+// ✅ Use MarkNode utilities from @lexical/mark
+import {
+  MarkNode,
+  $isMarkNode,
+  $wrapSelectionInMarkNode,
+} from '@lexical/mark';
 
 const MarkButton: React.FC = () => {
   const [editor] = useLexicalComposerContext();
@@ -18,28 +27,60 @@ const MarkButton: React.FC = () => {
     const selection = $getSelection();
     if (!$isRangeSelection(selection) || selection.isCollapsed()) return;
 
-    const isBackward = selection.isBackward();
-    const id = crypto.randomUUID(); // or any unique string identifier
+    const nodes = selection.getNodes();
 
-    $wrapSelectionInMarkNode(selection, isBackward, id, (ids) => $createMarkNode(ids));
+    const isAlreadyMarked = nodes.every((node) => {
+      const parent = node.getParent();
+      return parent && $isMarkNode(parent);
+    });
+
+    if (isAlreadyMarked) {
+      nodes.forEach((node) => {
+        const parent = node.getParent();
+        if (parent && $isMarkNode(parent)) {
+          const grandParent = parent.getParent();
+          if (!grandParent) return;
+
+          const markIndex = grandParent.getChildren().indexOf(parent);
+          const markChildren = parent.getChildren();
+
+          // Move children of <mark> into grandparent, replacing the <mark>
+          grandParent.splice(markIndex, 1, markChildren);
+        }
+      });
+    } else {
+      const id = Math.random().toString(36).substring(2, 10);
+      $wrapSelectionInMarkNode(selection, false, id);
+    }
   });
 
   editor.focus();
 };
 
+
   return (
-    <button type="button" className="toolbar-popup__button" onClick={onClick} title="Highlight">
+    <button
+      type="button"
+      className="toolbar-popup__button"
+      title="Highlight"
+      onClick={onClick}
+    >
       H
     </button>
   );
 };
 
+// ✅ Register Lexical's built-in MarkNode
 export const MarkFeatureClientFeature = createClientFeature({
   nodes: [MarkNode],
   toolbarInline: {
     groups: [
       toolbarFeatureButtonsGroupWithItems([
-        { key: 'markButton', label: 'Highlight', Component: MarkButton },
+        {
+          key: 'markButton',
+          label: 'Highlight',
+          Component: MarkButton,
+        },
       ]),
     ],
   },
