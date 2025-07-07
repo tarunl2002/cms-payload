@@ -11,6 +11,9 @@ import {
 } from 'lexical';
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHighlighter } from '@fortawesome/free-solid-svg-icons';
+
 
 // ✅ Use MarkNode utilities from @lexical/mark
 import {
@@ -65,7 +68,7 @@ const MarkButton: React.FC = () => {
       title="Highlight"
       onClick={onClick}
     >
-      H
+      <FontAwesomeIcon icon = {faHighlighter} />
     </button>
   );
 };
