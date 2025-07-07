@@ -1,5 +1,4 @@
-
-// import { lexicalEditor } from '@payloadcms/richtext-lexical';
+import { generateHTMLWithFootnotes } from '@/utils/generateHTMLWithFootnotes';
 import type { CollectionConfig } from 'payload';
 
 const Posts: CollectionConfig = {

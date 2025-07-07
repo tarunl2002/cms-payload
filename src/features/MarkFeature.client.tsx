@@ -83,6 +83,7 @@ export const MarkFeatureClientFeature = createClientFeature({
           key: 'markButton',
           label: 'Highlight',
           Component: MarkButton,
+          order: 45
         },
       ]),
     ],

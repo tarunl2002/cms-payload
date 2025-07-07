@@ -1,4 +1,3 @@
-// src/features/footnote/FootnoteFeature.ts
 import { createServerFeature } from '@payloadcms/richtext-lexical';
 import { FootnoteNode } from './FootNoteNode';
 

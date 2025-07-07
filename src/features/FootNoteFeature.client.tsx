@@ -1,41 +1,31 @@
-// src/features/footnote/FootnoteFeature.client.tsx
 'use client';
 import React from 'react';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import {
   createClientFeature,
   toolbarFeatureButtonsGroupWithItems,
 } from '@payloadcms/richtext-lexical/client';
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { $getSelection, $isRangeSelection } from 'lexical';
+import { $insertNodes, $getSelection, $isRangeSelection } from 'lexical';
 import { $createFootnoteNode, FootnoteNode } from './FootNoteNode';
 
-const FootnoteButton: React.FC = () => {
+let count = 1;
+
+const InsertFootnoteButton: React.FC = () => {
   const [editor] = useLexicalComposerContext();
 
-  const onClick = () => {
-    const id = Math.floor(Math.random() * 1000).toString();
-    const content = window.prompt('Enter footnote content') || '';
+  const handleClick = () => {
+    const content = prompt('Enter footnote content:');
+    if (!content) return;
 
     editor.update(() => {
-      const selection = $getSelection();
-      if ($isRangeSelection(selection)) {
-        const footnoteNode = $createFootnoteNode(id, content);
-        console.log("Inserting footnote");
-        selection.insertNodes([footnoteNode]);
-      }
+      const node = $createFootnoteNode(String(count++), content);
+      $insertNodes([node]);
     });
-
-    editor.focus();
   };
 
   return (
-    <button
-      type="button"
-      className="toolbar-popup__button"
-      title="Insert Footnote"
-      onClick={onClick}
-    >
-      [Fn]
+    <button onClick={handleClick} className="toolbar-popup__button" title="Insert Footnote">
+      ⓕ
     </button>
   );
 };
@@ -46,9 +36,9 @@ export const FootnoteFeatureClientFeature = createClientFeature({
     groups: [
       toolbarFeatureButtonsGroupWithItems([
         {
-          key: 'footnote-button',
+          key: 'footnote',
           label: 'Footnote',
-          Component: FootnoteButton,
+          Component: InsertFootnoteButton,
         },
       ]),
     ],
